@@ -30,7 +30,6 @@
 
     <div style="display:flex; gap:8px; align-items:center;">
       <span style="font-size:11px; letter-spacing:1px; text-transform:uppercase; opacity:0.6;">Flower</span>
-      <button style="padding:6px 12px; border:1px solid #f4f1ea; background:{{ poppyBtnBg }}; color:{{ poppyBtnColor }}; font-size:12px; cursor:pointer; letter-spacing:0.5px;" onClick="{{ setVariantPoppy }}">Poppy</button>
       <button style="padding:6px 12px; border:1px solid #f4f1ea; background:{{ daisyBtnBg }}; color:{{ daisyBtnColor }}; font-size:12px; cursor:pointer; letter-spacing:0.5px;" onClick="{{ setVariantDaisy }}">Daisy</button>
       <button style="padding:6px 12px; border:1px solid #f4f1ea; background:{{ tulipBtnBg }}; color:{{ tulipBtnColor }}; font-size:12px; cursor:pointer; letter-spacing:0.5px;" onClick="{{ setVariantTulip }}">Tulip</button>
     </div>
@@ -54,13 +53,7 @@
         <div style="width:2.3in; height:3.1in; box-sizing:border-box; background:#ffffff; border:1px solid #141414; border-radius:2px; position:relative; padding:10px; display:flex; flex-direction:column; align-items:center; overflow:hidden;">
 
           <div style="flex:1; display:flex; align-items:center; justify-content:center; width:100%; margin-top:10px;">
-            <sc-if value="{{ isPoppy }}" hint-placeholder-val="{{ true }}">
-              <div style="display:flex; flex-direction:column; align-items:center;">
-                <div style="font-size:15px; letter-spacing:3px; text-transform:uppercase; color:#141414;">{{ flowerName }}</div>
-                <img src="assets/poppy.png" alt="Poppy" style="height:195px; width:auto; object-fit:contain; display:block;"/>
-              </div>
-            </sc-if>
-            <sc-if value="{{ isDaisy }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ isDaisy }}" hint-placeholder-val="{{ true }}">
               <svg width="108" height="140" viewBox="0 0 120 160" fill="none">
                 <path d="M60 150 L60 74" stroke="#141414" stroke-width="2" stroke-linecap="round"/>
                 <path d="M60 122 C 46 120, 32 110, 24 96 C 36 98, 48 104, 60 114 Z" fill="#3f6b3a" stroke="#141414" stroke-width="1"/>
@@ -94,9 +87,7 @@
             </sc-if>
           </div>
 
-          <sc-if value="{{ isNotPoppy }}" hint-placeholder-val="{{ false }}">
-            <div style="font-size:15px; letter-spacing:3px; text-transform:uppercase; color:#141414; margin-top:2px;">{{ flowerName }}</div>
-          </sc-if>
+          <div style="font-size:15px; letter-spacing:3px; text-transform:uppercase; color:#141414; margin-top:2px;">{{ flowerName }}</div>
 
           <div style="margin-top:8px;"></div>
 
@@ -112,10 +103,10 @@
 </div>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 900, &quot;height&quot;: 1100}, &quot;variant&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;poppy&quot;, &quot;options&quot;: [&quot;poppy&quot;, &quot;daisy&quot;, &quot;tulip&quot;], &quot;tsType&quot;: &quot;string&quot;}, &quot;boxColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#ed1c24&quot;, &quot;options&quot;: [&quot;#ed1c24&quot;, &quot;#141414&quot;, &quot;#1f3d2b&quot;, &quot;#ece4d3&quot;, &quot;#a8452b&quot;], &quot;tsType&quot;: &quot;string&quot;}, &quot;brandText&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;milxn&quot;, &quot;tsType&quot;: &quot;string&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 900, &quot;height&quot;: 1100}, &quot;variant&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;daisy&quot;, &quot;options&quot;: [&quot;daisy&quot;, &quot;tulip&quot;], &quot;tsType&quot;: &quot;string&quot;}, &quot;boxColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#ed1c24&quot;, &quot;options&quot;: [&quot;#ed1c24&quot;, &quot;#141414&quot;, &quot;#1f3d2b&quot;, &quot;#ece4d3&quot;, &quot;#a8452b&quot;], &quot;tsType&quot;: &quot;string&quot;}, &quot;brandText&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;milxn&quot;, &quot;tsType&quot;: &quot;string&quot;}}">
 class Component extends DCLogic {
   state = {
-    variant: this.props.variant || 'poppy',
+    variant: this.props.variant || 'daisy',
     boxColor: this.props.boxColor || '#ed1c24'
   };
 
@@ -128,7 +119,6 @@ class Component extends DCLogic {
     const brandText = this.props.brandText || 'milxn';
 
     const content = {
-      poppy: { name: 'Poppy', latin: 'Papaver rhoeas', tag: 'PAPAVER' },
       daisy: { name: 'Daisy', latin: 'Bellis perennis', tag: 'BELLIS' },
       tulip: { name: 'Tulip', latin: 'Tulipa gesneriana', tag: 'TULIPA' }
     }[variant];
@@ -145,8 +135,6 @@ class Component extends DCLogic {
 
     return {
       cards,
-      isPoppy: variant === 'poppy',
-      isNotPoppy: variant !== 'poppy',
       isDaisy: variant === 'daisy',
       isTulip: variant === 'tulip',
       flowerName: content.name,
@@ -157,8 +145,6 @@ class Component extends DCLogic {
       boxColor: boxColor,
       boxTextColor: textColor,
 
-      poppyBtnBg: variant === 'poppy' ? activeBtn.bg : idleBtn.bg,
-      poppyBtnColor: variant === 'poppy' ? activeBtn.color : idleBtn.color,
       daisyBtnBg: variant === 'daisy' ? activeBtn.bg : idleBtn.bg,
       daisyBtnColor: variant === 'daisy' ? activeBtn.color : idleBtn.color,
       tulipBtnBg: variant === 'tulip' ? activeBtn.bg : idleBtn.bg,
@@ -170,7 +156,6 @@ class Component extends DCLogic {
       swatchBorderRust: boxColor === '#a8452b' ? '#ed1c24' : '#f4f1ea',
       swatchBorderRed: boxColor === '#ed1c24' ? '#f4f1ea' : '#ed1c24',
 
-      setVariantPoppy: () => this.setVariant('poppy'),
       setVariantDaisy: () => this.setVariant('daisy'),
       setVariantTulip: () => this.setVariant('tulip'),
       setBoxBlack: () => this.setBox('#141414'),
