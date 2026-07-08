@@ -55,20 +55,22 @@
           onMouseMove="{{ handleLogoMove }}"
           onMouseLeave="{{ resetTilt }}"
           onClick="{{ triggerPress }}"
-          style="width:210px; height:75px; background:#f4f3f0; border-radius:6px; padding:4px; box-sizing:border-box; box-shadow:0 12px 25px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.2); cursor:pointer; user-select:none; margin-bottom:14px; animation:{{ logoAnimation }}; transform-style:preserve-3d; perspective:600px; transform:{{ logoTransform }}; transition:transform 0.15s ease-out;">
-          <div style="width:100%; height:100%; position:relative; overflow:hidden; border-radius:2px;">
-            <div style="position:absolute; inset:0; display:grid; grid-template-columns:repeat(27,1fr); grid-template-rows:repeat(9,1fr);">
-              <sc-for list="{{ logoCells }}" as="c" hint-placeholder-count="243">
-                <div style="background:{{ c }};"></div>
-              </sc-for>
-            </div>
-            <div style="position:absolute; inset:0; pointer-events:none; background-image:
-              repeating-linear-gradient(45deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent 3px),
-              repeating-linear-gradient(-45deg, rgba(0,0,0,0.10) 0px, rgba(0,0,0,0.10) 1px, transparent 1px, transparent 3px),
-              radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,0.18) 100%);
-              mix-blend-mode:soft-light;"></div>
-            <div style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 40%, transparent 60%, rgba(0,0,0,0.20) 100%);">
-              <div style="position:absolute; left:0; width:100%; text-align:center; top:12px; font-family:'Archivo Black', 'Arial Black', Helvetica, Arial, sans-serif; font-weight:900; font-style:italic; color:#fdfdfc; font-size:46px; line-height:1; letter-spacing:1px; white-space:nowrap; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.4)); height:50px;">milxn</div>
+          style="width:210px; height:75px; position:relative; cursor:pointer; user-select:none; margin-bottom:14px; animation:{{ logoAnimation }}; transform-style:preserve-3d; perspective:600px; transform:{{ logoTransform }}; transition:transform 0.15s ease-out;">
+          <div style="width:702px; height:250px; transform:scale(0.2991); transform-origin:top left; background:#f4f3f0; border-radius:6px; padding:13px; box-sizing:border-box; box-shadow:0 24px 50px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4);">
+            <div style="width:100%; height:100%; position:relative; overflow:hidden; border-radius:2px;">
+              <div style="position:absolute; inset:0; display:grid; grid-template-columns:repeat(27,1fr); grid-template-rows:repeat(9,1fr); background:{{ colors.logoDark }};">
+                <sc-for list="{{ logoCells }}" as="c" hint-placeholder-count="243">
+                  <div style="background:{{ c }}; box-shadow:0 0 1.2px {{ c }};"></div>
+                </sc-for>
+              </div>
+              <div style="position:absolute; inset:0; pointer-events:none; background-image:
+                repeating-linear-gradient(45deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent 3px),
+                repeating-linear-gradient(-45deg, rgba(0,0,0,0.10) 0px, rgba(0,0,0,0.10) 1px, transparent 1px, transparent 3px),
+                radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,0.18) 100%);
+                mix-blend-mode:soft-light;"></div>
+              <div style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 40%, transparent 60%, rgba(0,0,0,0.20) 100%);">
+                <div style="position: absolute; left: 0; width: 100%; text-align: center; top: 25px; font-family: 'Arial Black', Helvetica, Arial, sans-serif; font-weight: 900; font-style: italic; color: #fdfdfc; font-size: 156px; line-height: 1; letter-spacing: 4px; white-space: nowrap; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4)); height: 174px">Milxn</div>
+              </div>
             </div>
           </div>
         </div>
@@ -968,7 +970,8 @@ class Component extends DCLogic {
     const colors = {
       bg: dark ? '#000000' : '#ffffff',
       text: dark ? '#ffffff' : '#000000',
-      accent: accentColor
+      accent: accentColor,
+      logoDark: currentPalette[2]
     };
 
     const y = s.yatzy;
@@ -1078,15 +1081,6 @@ class Component extends DCLogic {
           onStickerClick: () => this.setState({ activeSticker: 'peony' })
         },
         {
-          name: 'Poppy Sticker',
-          src: 'stickers/poppy_sticker/Milxn Big Sticker.dc.html',
-          iframeW: 600,
-          iframeH: 900,
-          scale: 0.26,
-          topOffset: -28,
-          onStickerClick: () => this.setState({ activeSticker: 'poppy' })
-        },
-        {
           name: 'Milxn Sticker Sheet',
           src: 'stickers/poppy_sticker/Milxn Sticker Sheet.dc.html',
           iframeW: 850,
@@ -1102,7 +1096,6 @@ class Component extends DCLogic {
         porsche: 'Milxn Big Sticker - Porsche',
         macbook: 'Milxn Big Sticker - Macbook',
         peony: 'Milxn Big Sticker - Peony',
-        poppy: 'Milxn Big Sticker (Poppy)',
         sheet: 'Milxn Sticker Sheet'
       }[s.activeSticker] : '',
       activeStickerSrc: s.activeSticker ? {
@@ -1110,7 +1103,6 @@ class Component extends DCLogic {
         porsche: 'stickers/poppy_sticker/Milxn Big Sticker - Porsche.dc.html',
         macbook: 'stickers/poppy_sticker/Milxn Big Sticker - Macbook.dc.html',
         peony: 'stickers/poppy_sticker/Milxn Big Sticker - Peony.dc.html',
-        poppy: 'stickers/poppy_sticker/Milxn Big Sticker.dc.html',
         sheet: 'stickers/poppy_sticker/Milxn Sticker Sheet.dc.html'
       }[s.activeSticker] : '',
       closeSticker: this.closeSticker,
