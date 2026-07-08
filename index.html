@@ -21,6 +21,13 @@
       80% { transform: scale(0.96) rotateY(-8deg) rotateX(4deg); }
       100% { transform: scale(1) rotateY(0deg) rotateX(0deg); }
     }
+    @keyframes logoPress3D {
+      0% { transform: scale(1) rotateY(0deg) rotateX(0deg); }
+      30% { transform: scale(0.85) rotateY(-90deg) rotateX(5deg); }
+      35% { transform: scale(0.85) rotateY(-90deg) rotateX(5deg); }
+      70% { transform: scale(1.1) rotateY(-270deg) rotateX(-5deg); }
+      100% { transform: scale(1) rotateY(-360deg) rotateX(0deg); }
+    }
     @keyframes glowPulse { 0%,100% { opacity: 0.35; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.15); } }
     @keyframes navIn { from { opacity: 0; transform: translateY(14px) rotateX(-40deg); } to { opacity: 1; transform: translateY(0) rotateX(0deg); } }
     @keyframes panelFlipIn { from { opacity: 0; transform: rotateX(-18deg) translateY(24px) scale(0.96); } to { opacity: 1; transform: rotateX(0deg) translateY(0) scale(1); } }
@@ -30,14 +37,14 @@
     @keyframes clockBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
     body { margin: 0; }
     a { color: inherit; text-decoration: none; }
-    a:hover { color: #ee2d24; }
+    a:hover { color: var(--accent); }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #333; }
   </style>
 </helmet>
 
-<div style="position:relative; min-height:100vh; background:{{ colors.bg }}; color:{{ colors.text }}; font-family:'Courier Prime', 'Courier New', monospace; overflow:hidden; transition:background 0.3s ease, color 0.3s ease;">
+<div style="position:relative; min-height:100vh; background:{{ colors.bg }}; color:{{ colors.text }}; font-family:'Courier Prime', 'Courier New', monospace; overflow:hidden; transition:background 0.3s ease, color 0.3s ease; --accent:{{ colors.accent }};">
 
   <div style="position:relative; z-index:1; display:flex; justify-content:center; perspective:1400px; padding:14vh 15px 70px 15px; box-sizing:border-box;">
     <div style="width:100%; max-width:440px; display:flex; flex-direction:column; align-items:center; text-align:center;">
@@ -48,8 +55,22 @@
           onMouseMove="{{ handleLogoMove }}"
           onMouseLeave="{{ resetTilt }}"
           onClick="{{ triggerPress }}"
-          style="background:{{ colors.accent }}; color:#fff; font-family:'Archivo Black', 'Arial Black', sans-serif; font-weight:900; font-style:italic; font-size:30px; line-height:1; padding:10px 20px; letter-spacing:-1px; display:inline-block; user-select:none; margin-bottom:14px; cursor:pointer; animation:{{ logoAnimation }}; transform-style:preserve-3d; perspective:600px; transform:{{ logoTransform }}; transition:transform 0.15s ease-out;">
-          milxn
+          style="width:210px; height:75px; background:#f4f3f0; border-radius:6px; padding:4px; box-sizing:border-box; box-shadow:0 12px 25px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.2); cursor:pointer; user-select:none; margin-bottom:14px; animation:{{ logoAnimation }}; transform-style:preserve-3d; perspective:600px; transform:{{ logoTransform }}; transition:transform 0.15s ease-out;">
+          <div style="width:100%; height:100%; position:relative; overflow:hidden; border-radius:2px;">
+            <div style="position:absolute; inset:0; display:grid; grid-template-columns:repeat(27,1fr); grid-template-rows:repeat(9,1fr);">
+              <sc-for list="{{ logoCells }}" as="c" hint-placeholder-count="243">
+                <div style="background:{{ c }};"></div>
+              </sc-for>
+            </div>
+            <div style="position:absolute; inset:0; pointer-events:none; background-image:
+              repeating-linear-gradient(45deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent 3px),
+              repeating-linear-gradient(-45deg, rgba(0,0,0,0.10) 0px, rgba(0,0,0,0.10) 1px, transparent 1px, transparent 3px),
+              radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,0.18) 100%);
+              mix-blend-mode:soft-light;"></div>
+            <div style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 40%, transparent 60%, rgba(0,0,0,0.20) 100%);">
+              <div style="position:absolute; left:0; width:100%; text-align:center; top:12px; font-family:'Archivo Black', 'Arial Black', Helvetica, Arial, sans-serif; font-weight:900; font-style:italic; color:#fdfdfc; font-size:46px; line-height:1; letter-spacing:1px; white-space:nowrap; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.4)); height:50px;">milxn</div>
+            </div>
+          </div>
         </div>
         <div style="font-size:11px; font-weight:700; opacity:0.85; letter-spacing:-0.2px;">{{ clock }}</div>
       </header>
@@ -94,10 +115,16 @@
       <sc-if value="{{ isStickers }}" hint-placeholder-val="{{ false }}">
         <section key="{{ viewKey }}" style="width:100%; margin-bottom:70px; animation:panelFlipIn 0.5s cubic-bezier(.2,.8,.2,1) both; transform-style:preserve-3d;">
           <div style="margin-bottom:24px; font-size:14px; font-weight:700; text-transform:lowercase;">stickers</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; max-width:380px; margin:0 auto 24px auto;">
-            <sc-for list="{{ stickers }}" as="sticker" hint-placeholder-count="4">
-              <div style="aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; padding:10px; box-sizing:border-box; animation:fadeUp 0.4s ease both;">
-                <img src="{{ sticker.src }}" alt="{{ sticker.alt }}" style="max-width:100%; max-height:100%; object-fit:contain; filter:drop-shadow(0 10px 20px rgba(0,0,0,0.35));" />
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:400px; margin:0 auto 24px auto;">
+            <sc-for list="{{ poppyStickers }}" as="st" hint-placeholder-count="6">
+              <div style="display:flex; flex-direction:column; align-items:center; animation:fadeUp 0.4s ease both;">
+                <div onClick="{{ st.onStickerClick }}"
+                     style="width:160px; height:213px; border-radius:6px; overflow:hidden; position:relative; border:1px solid {{ colors.text }}15; background:#ffffff; box-shadow:0 8px 24px rgba(0,0,0,0.12); transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.25s cubic-bezier(0.2,0.8,0.2,1); cursor:pointer;"
+                     style-hover="transform:translateY(-6px) scale(1.03) rotate(1deg); box-shadow:0 15px 30px rgba(0,0,0,0.3), 0 0 15px {{ colors.accent }}25; border-color:{{ colors.accent }}60;">
+                  <iframe src="{{ st.src }}" style="position:absolute; width:{{ st.iframeW }}px; height:{{ st.iframeH }}px; left:50%; top:{{ st.topOffset }}px; transform:translateX(-50%) scale({{ st.scale }}); transform-origin:top center; border:none; pointer-events:none; overflow:hidden; background:#fff;"></iframe>
+                  <div style="position:absolute; bottom:0; right:0; width:15px; height:15px; background:linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(255,255,255,0.15) 100%); pointer-events:none;"></div>
+                </div>
+                <div style="font-size:11px; margin-top:8px; opacity:0.8; font-weight:700; text-transform:lowercase; letter-spacing:-0.2px; text-align:center; max-width:160px;">{{ st.name }}</div>
               </div>
             </sc-for>
           </div>
@@ -139,7 +166,7 @@
                     <button onClick="{{ setModeSolo }}" style="background:{{ soloBg }}; color:{{ soloColor }}; border:1px solid {{ colors.text }}; padding:6px 16px; font-family:inherit; font-size:11px; cursor:pointer; text-transform:lowercase; font-weight:700; transition:transform 0.15s ease;">solo</button>
                     <button onClick="{{ setModeBot }}" style="background:{{ botBg }}; color:{{ botColor }}; border:1px solid {{ colors.text }}; padding:6px 16px; font-family:inherit; font-size:11px; cursor:pointer; text-transform:lowercase; font-weight:700; transition:transform 0.15s ease;">vs bot</button>
                   </div>
-                  <button onClick="{{ startGame }}" style="background:{{ colors.accent }}; color:#fff; border:none; padding:10px 24px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; text-transform:lowercase; box-shadow:0 10px 24px -10px rgba(238,45,36,0.7); transition:transform 0.15s ease;">start game</button>
+                  <button onClick="{{ startGame }}" style="background:{{ colors.accent }}; color:#fff; border:none; padding:10px 24px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; text-transform:lowercase; box-shadow:0 10px 24px -10px {{ colors.accent }}b0; transition:transform 0.15s ease;">start game</button>
                 </div>
               </sc-if>
 
@@ -156,7 +183,7 @@
                   </div>
 
                   <div style="text-align:center; margin-bottom:20px;">
-                    <button onClick="{{ rollDice }}" disabled="{{ rollDisabled }}" style="background:{{ colors.accent }}; color:#fff; border:none; padding:10px 24px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; text-transform:lowercase; opacity:{{ rollOpacity }}; box-shadow:0 10px 24px -10px rgba(238,45,36,0.7);">{{ rollLabel }}</button>
+                    <button onClick="{{ rollDice }}" disabled="{{ rollDisabled }}" style="background:{{ colors.accent }}; color:#fff; border:none; padding:10px 24px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; text-transform:lowercase; opacity:{{ rollOpacity }}; box-shadow:0 10px 24px -10px {{ colors.accent }}b0;">{{ rollLabel }}</button>
                   </div>
 
                   <div style="margin-top:20px; width:100%;">
@@ -198,16 +225,16 @@
       <!-- FOOTER SOCIALS -->
       <footer style="width:100%; margin-top:10px;">
         <div style="display:flex; justify-content:center; gap:18px; align-items:center;">
-          <a href="https://www.instagram.com/milan.cpp/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="opacity:0.7; display:inline-flex; transition:transform 0.2s ease, opacity 0.15s ease;" style-hover="opacity:1; transform:translateY(-3px) rotateX(10deg); color:#ee2d24;">
+          <a href="https://www.instagram.com/milan.cpp/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="opacity:0.7; display:inline-flex; transition:transform 0.2s ease, opacity 0.15s ease;" style-hover="opacity:1; transform:translateY(-3px) rotateX(10deg); color:{{ colors.accent }};">
             <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" fill="currentColor"/></svg>
           </a>
-          <a href="{{ youtubeUrl }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style="opacity:0.7; display:inline-flex; transition:transform 0.2s ease, opacity 0.15s ease;" style-hover="opacity:1; transform:translateY(-3px) rotateX(10deg); color:#ee2d24;">
+          <a href="{{ youtubeUrl }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style="opacity:0.7; display:inline-flex; transition:transform 0.2s ease, opacity 0.15s ease;" style-hover="opacity:1; transform:translateY(-3px) rotateX(10deg); color:{{ colors.accent }};">
             <svg viewBox="0 0 24 24" width="16" height="16"><path d="M23.498 6.163a3.003 3.003 0 00-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 00-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 002.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.002 3.002 0 002.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="currentColor"/></svg>
           </a>
-          <a href="{{ extraUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Link" style="opacity:0.7; display:inline-flex; transition:transform 0.2s ease, opacity 0.15s ease;" style-hover="opacity:1; transform:translateY(-3px) rotateX(10deg); color:#ee2d24;">
+          <a href="{{ extraUrl }}" target="_blank" rel="noopener noreferrer" aria-label="Link" style="opacity:0.7; display:inline-flex; transition:transform 0.2s ease, opacity 0.15s ease;" style-hover="opacity:1; transform:translateY(-3px) rotateX(10deg); color:{{ colors.accent }};">
             <svg viewBox="0 0 24 24" width="16" height="16"><path d="M10.59 13.41a1 1 0 001.42 0l4.24-4.24a3 3 0 000-4.24 3 3 0 00-4.24 0l-1.42 1.41a1 1 0 101.42 1.42l1.41-1.42a1 1 0 011.42 1.42l-4.24 4.24a1 1 0 000 1.41zm2.82-2.82a1 1 0 00-1.42 0L7.76 14.83a3 3 0 000 4.24 3 3 0 004.24 0l1.42-1.41a1 1 0 10-1.42-1.42l-1.41 1.42a1 1 0 01-1.42-1.42l4.24-4.24a1 1 0 000-1.41z" fill="currentColor"/></svg>
           </a>
-          <a href="https://open.spotify.com/user/1pt15okj1966bit3dlucdos3p?si=0451e1d755544cd2" target="_blank" rel="noopener noreferrer" aria-label="Spotify" style="opacity:0.7; display:inline-flex; transition:transform 0.2s ease, opacity 0.15s ease;" style-hover="opacity:1; transform:translateY(-3px) rotateX(10deg); color:#ee2d24;">
+          <a href="https://open.spotify.com/user/1pt15okj1966bit3dlucdos3p?si=0451e1d755544cd2" target="_blank" rel="noopener noreferrer" aria-label="Spotify" style="opacity:0.7; display:inline-flex; transition:transform 0.2s ease, opacity 0.15s ease;" style-hover="opacity:1; transform:translateY(-3px) rotateX(10deg); color:{{ colors.accent }};">
             <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12.008 0C5.375 0 0 5.375 0 12.008c0 6.633 5.375 12.008 12.008 12.008 6.633 0 12.008-5.375 12.008-12.008C24.016 5.375 18.64 0 12.008 0zm5.498 17.322c-.223.367-.706.487-1.073.264-2.985-1.823-6.739-2.235-11.164-1.227-.417.095-.834-.17-.929-.587-.095-.417.17-.834.587-.929 4.846-1.107 8.99-.636 12.316 1.393.367.223.488.706.263 1.086zm1.467-3.262c-.28.455-.878.604-1.333.324-3.414-2.1-8.62-2.712-12.656-1.488-.51.155-1.045-.136-1.2-.646-.155-.51.136-1.046.646-1.2 4.61-1.397 10.354-.716 14.22 1.664.454.28.604.878.323 1.346zm.127-3.398C15.176 8.358 8.7 8.144 4.965 9.277c-.573.173-1.18-.106-1.353-.68-.173-.573.106-1.18.68-1.353 4.29-1.302 11.44-1.056 16.096 1.707.515.306.682.975.377 1.49-.306.514-.975.683-1.49.377z" fill="currentColor"/></svg>
           </a>
         </div>
@@ -216,6 +243,25 @@
     </div>
   </div>
 </div>
+
+      <!-- STICKER DETAIL MODAL -->
+      <sc-if value="{{ activeSticker }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); animation:fadeUp 0.3s ease both; padding:20px; box-sizing:border-box;">
+          <div style="position:absolute; inset:0; cursor:pointer;" onClick="{{ closeSticker }}"></div>
+          
+          <div style="position:relative; width:100%; max-width:900px; height:90vh; background:#141414; border:1px solid #333; border-radius:8px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.8); animation:panelFlipIn 0.4s cubic-bezier(.2,.8,.2,1) both;">
+            <!-- Modal Header -->
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-bottom:1px solid #222; color:#fff; font-size:13px; font-weight:700; text-transform:lowercase; user-select:none;">
+              <span>{{ activeStickerName }}</span>
+              <span onClick="{{ closeSticker }}" style="cursor:pointer; opacity:0.8; padding:4px 8px; border:1px solid #333; border-radius:4px; background:#1e1e1e; font-size:11px; transition:all 0.2s;" style-hover="opacity:1; border-color:{{ colors.accent }}; color:{{ colors.accent }};">close</span>
+            </div>
+            <!-- Modal Body (Iframe) -->
+            <div style="flex:1; width:100%; background:#e7e4dd; position:relative;">
+              <iframe src="{{ activeStickerSrc }}" style="width:100%; height:100%; border:none; display:block;"></iframe>
+            </div>
+          </div>
+        </div>
+      </sc-if>
 
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -473,6 +519,111 @@ function isCardComplete(card) {
   return cats.every(c => card[c] !== null);
 }
 
+/* ---- tartan palettes for logo ---- */
+const TARTAN_PALETTES = [
+  {
+    name: 'red',
+    1: '#E62325',
+    2: '#782226',
+    3: '#0B0A09',
+    4: '#CD7063',
+    5: '#B9A087',
+    6: '#695C52',
+  },
+  {
+    name: 'blue',
+    1: '#2f7de0',
+    2: '#1e3f6b',
+    3: '#0B0A09',
+    4: '#7fa8d8',
+    5: '#B9A087',
+    6: '#695C52',
+  },
+  {
+    name: 'green',
+    1: '#25a848',
+    2: '#1c4a2a',
+    3: '#0B0A09',
+    4: '#8cc79a',
+    5: '#B9A087',
+    6: '#695C52',
+  },
+  {
+    name: 'purple',
+    1: '#9b3fd0',
+    2: '#43225f',
+    3: '#0B0A09',
+    4: '#c193da',
+    5: '#B9A087',
+    6: '#695C52',
+  },
+  {
+    name: 'orange',
+    1: '#f07a1e',
+    2: '#7d3a12',
+    3: '#0B0A09',
+    4: '#e0a878',
+    5: '#B9A087',
+    6: '#695C52',
+  },
+  {
+    name: 'teal',
+    1: '#17b3a6',
+    2: '#0f4a45',
+    3: '#0B0A09',
+    4: '#8fccc5',
+    5: '#B9A087',
+    6: '#695C52',
+  },
+  {
+    name: 'mustard',
+    1: '#e0ad25',
+    2: '#6f5312',
+    3: '#0B0A09',
+    4: '#d8c58a',
+    5: '#B9A087',
+    6: '#695C52',
+  },
+  {
+    name: 'pink',
+    1: '#ec4d92',
+    2: '#7d2049',
+    3: '#0B0A09',
+    4: '#e59cbd',
+    5: '#B9A087',
+    6: '#695C52',
+  },
+  {
+    name: 'navy',
+    1: '#3a6bc4',
+    2: '#1a2740',
+    3: '#0B0A09',
+    4: '#8fa2c7',
+    5: '#B9A087',
+    6: '#695C52',
+  },
+  {
+    name: 'brown',
+    1: '#b5793f',
+    2: '#4a2c18',
+    3: '#0B0A09',
+    4: '#d0ac86',
+    5: '#B9A087',
+    6: '#695C52',
+  }
+];
+
+function generateTartanCells(palette) {
+  const A = [2,2,3,6,3];
+  const B = [1,1,2,4,2];
+  const C = [4,4,6,5,6];
+  const rep = a => Array.from({length:27}, (_,i) => a[i % a.length]);
+  const rows = [A,B,B,A,C,A,B,B,A].map(rep);
+  const cells = [];
+  for (const row of rows) for (const n of row) cells.push(palette[n]);
+  return cells;
+}
+
 /* ---- component ---- */
 class Component extends DCLogic {
   state = {
@@ -483,6 +634,9 @@ class Component extends DCLogic {
     tiltX: 0,
     tiltY: 0,
     pressing: false,
+    logoPressing: false,
+    logoVariantIndex: 0,
+    activeSticker: null,
     secretTab: 'chat',
     messages: [],
     youtubeUrl: 'https://www.youtube.com/watch?v=7wIwJvyZPv0',
@@ -608,9 +762,24 @@ class Component extends DCLogic {
   resetTilt = () => this.setState({ tiltX: 0, tiltY: 0 });
 
   triggerPress = () => {
-    this.setState({ pressing: true });
+    if (this.state.logoPressing) return;
+    this.setState({ logoPressing: true });
     clearTimeout(this._pressTimer);
-    this._pressTimer = setTimeout(() => this.setState({ pressing: false }), 700);
+    
+    // Change color variant halfway through the 3D flip animation
+    setTimeout(() => {
+      this.setState(s => ({
+        logoVariantIndex: (s.logoVariantIndex + 1) % TARTAN_PALETTES.length
+      }));
+    }, 300);
+
+    this._pressTimer = setTimeout(() => {
+      this.setState({ logoPressing: false });
+    }, 700);
+  };
+
+  closeSticker = () => {
+    this.setState({ activeSticker: null });
   };
 
   goMenu = (e) => { e && e.preventDefault(); this.setState(s => ({ view: 'menu', viewKey: s.viewKey + 1 })); };
@@ -791,10 +960,15 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const dark = s.theme === 'dark';
+    
+    // Dynamically retrieve the current tartan palette color for accent
+    const currentPalette = TARTAN_PALETTES[s.logoVariantIndex || 0];
+    const accentColor = currentPalette[1];
+    
     const colors = {
       bg: dark ? '#000000' : '#ffffff',
       text: dark ? '#ffffff' : '#000000',
-      accent: '#ee2d24'
+      accent: accentColor
     };
 
     const y = s.yatzy;
@@ -858,19 +1032,88 @@ class Component extends DCLogic {
       colors,
       themeLabel: dark ? 'light' : 'dark',
       clock: s.clock,
-      logoTransform: `rotateX(${s.tiltX}deg) rotateY(${s.tiltY}deg)`,
-      logoAnimation: s.pressing ? 'logoPress 0.7s cubic-bezier(.22,.9,.25,1)' : 'floatLogo 4.5s ease-in-out infinite',
+      logoCells: generateTartanCells(currentPalette),
+      logoTransform: s.logoPressing ? 'rotateX(0deg) rotateY(0deg)' : `rotateX(${s.tiltX}deg) rotateY(${s.tiltY}deg)`,
+      logoAnimation: s.logoPressing ? 'logoPress3D 0.7s cubic-bezier(.22,.8,.25,1)' : 'floatLogo 4.5s ease-in-out infinite',
       triggerPress: this.triggerPress,
       isMenu: s.view === 'menu',
       isAbout: s.view === 'about',
       isSecret: s.view === 'secret',
       isStickers: s.view === 'stickers',
-      stickers: [
-        { src: 'stickers/koenigsegg-sticker.png', alt: 'koenigsegg sticker' },
-        { src: 'stickers/macbook-sticker.png', alt: 'macbook sticker' },
-        { src: 'stickers/peony-sticker.png', alt: 'peony sticker' },
-        { src: 'stickers/porsche-sticker.png', alt: 'porsche sticker' }
+      poppyStickers: [
+        {
+          name: 'Koenigsegg Sticker',
+          src: 'stickers/poppy_sticker/Milxn Big Sticker - Koenigsegg.dc.html',
+          iframeW: 600,
+          iframeH: 900,
+          scale: 0.26,
+          topOffset: -28,
+          onStickerClick: () => this.setState({ activeSticker: 'koenigsegg' })
+        },
+        {
+          name: 'Porsche Sticker',
+          src: 'stickers/poppy_sticker/Milxn Big Sticker - Porsche.dc.html',
+          iframeW: 600,
+          iframeH: 900,
+          scale: 0.26,
+          topOffset: -28,
+          onStickerClick: () => this.setState({ activeSticker: 'porsche' })
+        },
+        {
+          name: 'Macbook Sticker',
+          src: 'stickers/poppy_sticker/Milxn Big Sticker - Macbook.dc.html',
+          iframeW: 600,
+          iframeH: 900,
+          scale: 0.26,
+          topOffset: -28,
+          onStickerClick: () => this.setState({ activeSticker: 'macbook' })
+        },
+        {
+          name: 'Peony Sticker',
+          src: 'stickers/poppy_sticker/Milxn Big Sticker - Peony.dc.html',
+          iframeW: 600,
+          iframeH: 900,
+          scale: 0.26,
+          topOffset: -28,
+          onStickerClick: () => this.setState({ activeSticker: 'peony' })
+        },
+        {
+          name: 'Poppy Sticker',
+          src: 'stickers/poppy_sticker/Milxn Big Sticker.dc.html',
+          iframeW: 600,
+          iframeH: 900,
+          scale: 0.26,
+          topOffset: -28,
+          onStickerClick: () => this.setState({ activeSticker: 'poppy' })
+        },
+        {
+          name: 'Milxn Sticker Sheet',
+          src: 'stickers/poppy_sticker/Milxn Sticker Sheet.dc.html',
+          iframeW: 850,
+          iframeH: 1200,
+          scale: 0.185,
+          topOffset: -12,
+          onStickerClick: () => this.setState({ activeSticker: 'sheet' })
+        }
       ],
+      activeSticker: s.activeSticker,
+      activeStickerName: s.activeSticker ? {
+        koenigsegg: 'Milxn Big Sticker - Koenigsegg',
+        porsche: 'Milxn Big Sticker - Porsche',
+        macbook: 'Milxn Big Sticker - Macbook',
+        peony: 'Milxn Big Sticker - Peony',
+        poppy: 'Milxn Big Sticker (Poppy)',
+        sheet: 'Milxn Sticker Sheet'
+      }[s.activeSticker] : '',
+      activeStickerSrc: s.activeSticker ? {
+        koenigsegg: 'stickers/poppy_sticker/Milxn Big Sticker - Koenigsegg.dc.html',
+        porsche: 'stickers/poppy_sticker/Milxn Big Sticker - Porsche.dc.html',
+        macbook: 'stickers/poppy_sticker/Milxn Big Sticker - Macbook.dc.html',
+        peony: 'stickers/poppy_sticker/Milxn Big Sticker - Peony.dc.html',
+        poppy: 'stickers/poppy_sticker/Milxn Big Sticker.dc.html',
+        sheet: 'stickers/poppy_sticker/Milxn Sticker Sheet.dc.html'
+      }[s.activeSticker] : '',
+      closeSticker: this.closeSticker,
       viewKey: s.viewKey,
       handleLogoMove: this.handleLogoMove,
       resetTilt: this.resetTilt,

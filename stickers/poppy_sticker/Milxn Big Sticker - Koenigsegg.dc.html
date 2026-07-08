@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,800&display=swap" rel="stylesheet">
+  <style>
+    @page { size: 6in 8in; margin: 0; }
+    @media print {
+      .no-print { display: none !important; }
+      html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; }
+      #card-wrap { padding: 0 !important; }
+    }
+    body { margin: 0; background: #e7e4dd; }
+  </style>
+</helmet>
+
+<div style="min-height: 100vh; font-family: Georgia, 'Times New Roman', serif;">
+
+  <div class="no-print" style="display:flex; align-items:center; justify-content:center; gap:16px; padding:16px; background:#141414; color:#f4f1ea; font-size:11px; letter-spacing:0.5px;">
+    One big sticker, 6in × 8in — Save as PDF / Cmd+P to print, or export as PNG.
+  </div>
+
+  <div id="card-wrap" style="display:flex; justify-content:center; padding:40px 16px;">
+    <div style="width:6in; height:8in; box-sizing:border-box; background:#ffffff; border:1px solid #141414; border-radius:4px; position:relative; padding:28px; display:flex; flex-direction:column; align-items:center; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.15);">
+
+      <div style="position:absolute; top:22px; left:26px; font-family:Georgia, serif; font-weight:400; font-size:13px; letter-spacing:1px; color:#8a8a8a;">No. 01/07</div>
+      <div style="position:absolute; top:22px; right:26px; font-family:Georgia, serif; font-weight:400; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:#8a8a8a;">Milxn &middot; Atelier</div>
+
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; margin-top:10px; gap:32px;">
+        <div style="font-family:Georgia, serif; font-weight:400; font-style:italic; font-size:22px; letter-spacing:3px; text-transform:uppercase; color:#c81e1e;">engineered obsession</div>
+        <img src="assets/koenigsegg.png" alt="Koenigsegg" style="width:460px; height:340px; object-fit:contain; display:block;"/>
+      </div>
+
+      <div style="margin-top:16px;"></div>
+
+      <div style="background:#c81e1e; padding:16px 46px 13px; border-radius:4px;">
+        <div style="font-family:'Poppins', Arial, sans-serif; font-weight:800; font-style:italic; font-size:46px; letter-spacing:-0.5px; color:#f4f1ea;">milxn</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 700, &quot;height&quot;: 900}}"></script>
+</body>
+</html>
