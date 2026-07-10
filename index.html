@@ -50,29 +50,14 @@
 
       <!-- HEADER / LOGO -->
       <header style="margin-bottom:110px; display:flex; flex-direction:column; align-items:center;">
-        <div
-          onMouseMove="{{ handleLogoMove }}"
-          onMouseLeave="{{ resetTilt }}"
-          onClick="{{ triggerPress }}"
-          style="width:210px; height:75px; position:relative; cursor:pointer; user-select:none; margin-bottom:14px; animation:{{ logoAnimation }}; transform-style:preserve-3d; perspective:600px; transform:{{ logoTransform }}; transition:transform 0.15s ease-out;">
-          <div style="width:702px; height:250px; transform:scale(0.2991); transform-origin:top left; background:#f4f3f0; border-radius:6px; padding:13px; box-sizing:border-box; box-shadow:0 24px 50px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4);">
-            <div style="width:100%; height:100%; position:relative; overflow:hidden; border-radius:2px;">
-              <div style="position:absolute; inset:0; display:grid; grid-template-columns:repeat(27,1fr); grid-template-rows:repeat(9,1fr); background:{{ colors.logoDark }};">
-                <sc-for list="{{ logoCells }}" as="c" hint-placeholder-count="243">
-                  <div style="background:{{ c }}; box-shadow:0 0 1.2px {{ c }};"></div>
-                </sc-for>
-              </div>
-              <div style="position:absolute; inset:0; pointer-events:none; background-image:
-                repeating-linear-gradient(45deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent 3px),
-                repeating-linear-gradient(-45deg, rgba(0,0,0,0.10) 0px, rgba(0,0,0,0.10) 1px, transparent 1px, transparent 3px),
-                radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,0.18) 100%);
-                mix-blend-mode:soft-light;"></div>
-              <div style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 50% 40%, transparent 60%, rgba(0,0,0,0.20) 100%);">
-                <div style="position: absolute; left: 0; width: 100%; text-align: center; top: 25px; font-family: 'Arial Black', Helvetica, Arial, sans-serif; font-weight: 900; font-style: italic; color: #fdfdfc; font-size: 156px; line-height: 1; letter-spacing: 4px; white-space: nowrap; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4)); height: 174px">Milxn</div>
-              </div>
-            </div>
+        <a href="https://milxn.de" style="display:inline-block; text-decoration:none;">
+          <div
+            onMouseMove="{{ handleLogoMove }}"
+            onMouseLeave="{{ resetTilt }}"
+            style="background:#e8221f; border-radius:4px; padding:12px 32px; display:inline-block; box-shadow:0 8px 24px rgba(232,34,31,0.25); transform-style:preserve-3d; perspective:600px; transform:{{ logoTransform }}; transition:transform 0.15s ease-out; cursor:pointer; user-select:none; margin-bottom:14px; animation:floatLogo 4.5s ease-in-out infinite;">
+            <span style="color:#ffffff; font-family:'Archivo Black', 'Arial Black', sans-serif; font-size:42px; font-weight:900; font-style:italic; letter-spacing:-0.03em; line-height:1; text-transform:lowercase; display:inline-block;">milxn</span>
           </div>
-        </div>
+        </a>
         <div style="font-size:11px; font-weight:700; opacity:0.85; letter-spacing:-0.2px;">{{ clock }}</div>
       </header>
 
@@ -205,47 +190,7 @@ const TARTAN_PALETTES = [
     3: '#0B0A09',
     4: '#d8c58a',
     5: '#B9A087',
-    6: '#695C52',
-  },
-  {
-    name: 'pink',
-    1: '#ec4d92',
-    2: '#7d2049',
-    3: '#0B0A09',
-    4: '#e59cbd',
-    5: '#B9A087',
-    6: '#695C52',
-  },
-  {
-    name: 'navy',
-    1: '#3a6bc4',
-    2: '#1a2740',
-    3: '#0B0A09',
-    4: '#8fa2c7',
-    5: '#B9A087',
-    6: '#695C52',
-  },
-  {
-    name: 'brown',
-    1: '#b5793f',
-    2: '#4a2c18',
-    3: '#0B0A09',
-    4: '#d0ac86',
-    5: '#B9A087',
-    6: '#695C52',
-  }
-];
 
-function generateTartanCells(palette) {
-  const A = [2,2,3,6,3];
-  const B = [1,1,2,4,2];
-  const C = [4,4,6,5,6];
-  const rep = a => Array.from({length:27}, (_,i) => a[i % a.length]);
-  const rows = [A,B,B,A,C,A,B,B,A].map(rep);
-  const cells = [];
-  for (const row of rows) for (const n of row) cells.push(palette[n]);
-  return cells;
-}
 
 /* ---- component ---- */
 class Component extends DCLogic {
@@ -256,9 +201,6 @@ class Component extends DCLogic {
     clock: '',
     tiltX: 0,
     tiltY: 0,
-    pressing: false,
-    logoPressing: false,
-    logoVariantIndex: 0,
     youtubeUrl: 'https://www.youtube.com/watch?v=7wIwJvyZPv0',
     extraUrl: ''
   };
@@ -269,7 +211,6 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     clearInterval(this._clockTimer);
-    clearTimeout(this._pressTimer);
   }
 
   _tick() {
@@ -301,22 +242,7 @@ class Component extends DCLogic {
   };
   resetTilt = () => this.setState({ tiltX: 0, tiltY: 0 });
 
-  triggerPress = () => {
-    if (this.state.logoPressing) return;
-    this.setState({ logoPressing: true });
-    clearTimeout(this._pressTimer);
-    
-    // Change color variant halfway through the 3D flip animation
-    setTimeout(() => {
-      this.setState(s => ({
-        logoVariantIndex: (s.logoVariantIndex + 1) % TARTAN_PALETTES.length
-      }));
-    }, 300);
 
-    this._pressTimer = setTimeout(() => {
-      this.setState({ logoPressing: false });
-    }, 700);
-  };
 
   goMenu = (e) => { e && e.preventDefault(); this.setState(s => ({ view: 'menu', viewKey: s.viewKey + 1 })); };
   goAbout = (e) => { e && e.preventDefault(); this.setState(s => ({ view: 'about', viewKey: s.viewKey + 1 })); };
@@ -326,25 +252,17 @@ class Component extends DCLogic {
     const s = this.state;
     const dark = s.theme === 'dark';
     
-    // Dynamically retrieve the current tartan palette color for accent
-    const currentPalette = TARTAN_PALETTES[s.logoVariantIndex || 0];
-    const accentColor = currentPalette[1];
-    
     const colors = {
       bg: dark ? '#000000' : '#ffffff',
       text: dark ? '#ffffff' : '#000000',
-      accent: accentColor,
-      logoDark: currentPalette[2]
+      accent: '#e8221f'
     };
 
     return {
       colors,
       themeLabel: dark ? 'light' : 'dark',
       clock: s.clock,
-      logoCells: generateTartanCells(currentPalette),
-      logoTransform: s.logoPressing ? 'rotateX(0deg) rotateY(0deg)' : `rotateX(${s.tiltX}deg) rotateY(${s.tiltY}deg)`,
-      logoAnimation: s.logoPressing ? 'logoPress3D 0.7s cubic-bezier(.22,.8,.25,1)' : 'floatLogo 4.5s ease-in-out infinite',
-      triggerPress: this.triggerPress,
+      logoTransform: `rotateX(${s.tiltX}deg) rotateY(${s.tiltY}deg)`,
       isMenu: s.view === 'menu',
       isAbout: s.view === 'about',
       viewKey: s.viewKey,
