@@ -112,26 +112,7 @@
         </section>
       </sc-if>
 
-      <!-- STICKERS -->
-      <sc-if value="{{ isStickers }}" hint-placeholder-val="{{ false }}">
-        <section key="{{ viewKey }}" style="width:100%; margin-bottom:70px; animation:panelFlipIn 0.5s cubic-bezier(.2,.8,.2,1) both; transform-style:preserve-3d;">
-          <div style="margin-bottom:24px; font-size:14px; font-weight:700; text-transform:lowercase;">stickers</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:400px; margin:0 auto 24px auto;">
-            <sc-for list="{{ poppyStickers }}" as="st" hint-placeholder-count="6">
-              <div style="display:flex; flex-direction:column; align-items:center; animation:fadeUp 0.4s ease both;">
-                <div onClick="{{ st.onStickerClick }}"
-                     style="width:160px; height:213px; border-radius:6px; overflow:hidden; position:relative; border:1px solid {{ colors.text }}15; background:#ffffff; box-shadow:0 8px 24px rgba(0,0,0,0.12); transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.25s cubic-bezier(0.2,0.8,0.2,1); cursor:pointer;"
-                     style-hover="transform:translateY(-6px) scale(1.03) rotate(1deg); box-shadow:0 15px 30px rgba(0,0,0,0.3), 0 0 15px {{ colors.accent }}25; border-color:{{ colors.accent }}60;">
-                  <iframe src="{{ st.src }}" style="position:absolute; width:{{ st.iframeW }}px; height:{{ st.iframeH }}px; left:50%; top:{{ st.topOffset }}px; transform:translateX(-50%) scale({{ st.scale }}); transform-origin:top center; border:none; pointer-events:none; overflow:hidden; background:#fff;"></iframe>
-                  <div style="position:absolute; bottom:0; right:0; width:15px; height:15px; background:linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(255,255,255,0.15) 100%); pointer-events:none;"></div>
-                </div>
-                <div style="font-size:11px; margin-top:8px; opacity:0.8; font-weight:700; text-transform:lowercase; letter-spacing:-0.2px; text-align:center; max-width:160px;">{{ st.name }}</div>
-              </div>
-            </sc-for>
-          </div>
-          <a href="#menu" onClick="{{ goMenu }}" style="font-size:12px; font-weight:700; text-transform:lowercase; opacity:0.8; display:inline-block;">&lt; back</a>
-        </section>
-      </sc-if>
+
 
       <!-- SECRET -->
       <sc-if value="{{ isSecret }}" hint-placeholder-val="{{ false }}">
@@ -245,24 +226,7 @@
   </div>
 </div>
 
-      <!-- STICKER DETAIL MODAL -->
-      <sc-if value="{{ activeSticker }}" hint-placeholder-val="{{ false }}">
-        <div style="position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); animation:fadeUp 0.3s ease both; padding:20px; box-sizing:border-box;">
-          <div style="position:absolute; inset:0; cursor:pointer;" onClick="{{ closeSticker }}"></div>
-          
-          <div style="position:relative; width:100%; max-width:900px; height:90vh; background:#141414; border:1px solid #333; border-radius:8px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.8); animation:panelFlipIn 0.4s cubic-bezier(.2,.8,.2,1) both;">
-            <!-- Modal Header -->
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-bottom:1px solid #222; color:#fff; font-size:13px; font-weight:700; text-transform:lowercase; user-select:none;">
-              <span>{{ activeStickerName }}</span>
-              <span onClick="{{ closeSticker }}" style="cursor:pointer; opacity:0.8; padding:4px 8px; border:1px solid #333; border-radius:4px; background:#1e1e1e; font-size:11px; transition:all 0.2s;" style-hover="opacity:1; border-color:{{ colors.accent }}; color:{{ colors.accent }};">close</span>
-            </div>
-            <!-- Modal Body (Iframe) -->
-            <div style="flex:1; width:100%; background:#e7e4dd; position:relative;">
-              <iframe src="{{ activeStickerSrc }}" style="width:100%; height:100%; border:none; display:block;"></iframe>
-            </div>
-          </div>
-        </div>
-      </sc-if>
+
 
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -637,7 +601,6 @@ class Component extends DCLogic {
     pressing: false,
     logoPressing: false,
     logoVariantIndex: 0,
-    activeSticker: null,
     secretTab: 'chat',
     messages: [],
     youtubeUrl: 'https://www.youtube.com/watch?v=7wIwJvyZPv0',
@@ -779,14 +742,9 @@ class Component extends DCLogic {
     }, 700);
   };
 
-  closeSticker = () => {
-    this.setState({ activeSticker: null });
-  };
-
   goMenu = (e) => { e && e.preventDefault(); this.setState(s => ({ view: 'menu', viewKey: s.viewKey + 1 })); };
   goAbout = (e) => { e && e.preventDefault(); this.setState(s => ({ view: 'about', viewKey: s.viewKey + 1 })); };
   goSecret = (e) => { e && e.preventDefault(); this.setState(s => ({ view: 'secret', viewKey: s.viewKey + 1 })); };
-  goStickers = (e) => { e && e.preventDefault(); this.setState(s => ({ view: 'stickers', viewKey: s.viewKey + 1 })); };
   goChat = () => this.setState({ secretTab: 'chat' });
   goYatzy = () => this.setState({ secretTab: 'yatzy' });
   toggleTheme = (e) => { e && e.preventDefault(); this.setState(s => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })); };
@@ -1041,74 +999,10 @@ class Component extends DCLogic {
       isMenu: s.view === 'menu',
       isAbout: s.view === 'about',
       isSecret: s.view === 'secret',
-      isStickers: s.view === 'stickers',
-      poppyStickers: [
-        {
-          name: 'Koenigsegg Sticker',
-          src: 'stickers/poppy_sticker/Milxn Big Sticker - Koenigsegg.dc.html',
-          iframeW: 600,
-          iframeH: 900,
-          scale: 0.26,
-          topOffset: -28,
-          onStickerClick: () => this.setState({ activeSticker: 'koenigsegg' })
-        },
-        {
-          name: 'Porsche Sticker',
-          src: 'stickers/poppy_sticker/Milxn Big Sticker - Porsche.dc.html',
-          iframeW: 600,
-          iframeH: 900,
-          scale: 0.26,
-          topOffset: -28,
-          onStickerClick: () => this.setState({ activeSticker: 'porsche' })
-        },
-        {
-          name: 'Macbook Sticker',
-          src: 'stickers/poppy_sticker/Milxn Big Sticker - Macbook.dc.html',
-          iframeW: 600,
-          iframeH: 900,
-          scale: 0.26,
-          topOffset: -28,
-          onStickerClick: () => this.setState({ activeSticker: 'macbook' })
-        },
-        {
-          name: 'Peony Sticker',
-          src: 'stickers/poppy_sticker/Milxn Big Sticker - Peony.dc.html',
-          iframeW: 600,
-          iframeH: 900,
-          scale: 0.26,
-          topOffset: -28,
-          onStickerClick: () => this.setState({ activeSticker: 'peony' })
-        },
-        {
-          name: 'Milxn Sticker Sheet',
-          src: 'stickers/poppy_sticker/Milxn Sticker Sheet.dc.html',
-          iframeW: 850,
-          iframeH: 1200,
-          scale: 0.185,
-          topOffset: -12,
-          onStickerClick: () => this.setState({ activeSticker: 'sheet' })
-        }
-      ],
-      activeSticker: s.activeSticker,
-      activeStickerName: s.activeSticker ? {
-        koenigsegg: 'Milxn Big Sticker - Koenigsegg',
-        porsche: 'Milxn Big Sticker - Porsche',
-        macbook: 'Milxn Big Sticker - Macbook',
-        peony: 'Milxn Big Sticker - Peony',
-        sheet: 'Milxn Sticker Sheet'
-      }[s.activeSticker] : '',
-      activeStickerSrc: s.activeSticker ? {
-        koenigsegg: 'stickers/poppy_sticker/Milxn Big Sticker - Koenigsegg.dc.html',
-        porsche: 'stickers/poppy_sticker/Milxn Big Sticker - Porsche.dc.html',
-        macbook: 'stickers/poppy_sticker/Milxn Big Sticker - Macbook.dc.html',
-        peony: 'stickers/poppy_sticker/Milxn Big Sticker - Peony.dc.html',
-        sheet: 'stickers/poppy_sticker/Milxn Sticker Sheet.dc.html'
-      }[s.activeSticker] : '',
-      closeSticker: this.closeSticker,
       viewKey: s.viewKey,
       handleLogoMove: this.handleLogoMove,
       resetTilt: this.resetTilt,
-      goMenu: this.goMenu, goAbout: this.goAbout, goSecret: this.goSecret, goStickers: this.goStickers,
+      goMenu: this.goMenu, goAbout: this.goAbout, goSecret: this.goSecret,
       toggleTheme: this.toggleTheme,
       goChat: this.goChat, goYatzy: this.goYatzy,
       isChatTab: s.secretTab === 'chat',
